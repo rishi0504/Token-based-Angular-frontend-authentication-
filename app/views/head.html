@@ -1,4 +1,6 @@
 <div ng-controller="MainCtrl">
+    <input type="hidden" ng-model="name">
+    <input type="hidden" ng-model="email">
     <nav class="nav navbar-default" style="background-color: #1abc9c;" ng-hide="islogin()">
         <div class="nav navbar-brand">
             <a href="#" style="color: white">Mbook</a>
@@ -15,10 +17,10 @@
             <a href="#" style="color: white">Mbook</a>
         </div>
         <ul class="nav navbar-nav" style="float: right">
-            <li><a href="#user" style="color: white">User</a></li>
+            <li><a href="#user" style="color: white">{{user.name}}</a></li>
             <li><a href="#setting" style="color: white">Setting</a></li>
             <li><a href="#/" style="color: white" ng-click="islogout()">Logout</a></li>
         </ul>
     </nav>
 
-</div>
+</div>

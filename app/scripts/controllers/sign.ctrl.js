@@ -22,6 +22,7 @@ mod.controller("SignCtrl", function ($scope, $window, $localStorage,$location, $
             $localStorage.statusdata = data.status;
             $location.path('/user');
         }).error(function (data, status, headers, config) {
+            
             delete $window.sessionStorage.token;
             delete $window.sessionStorage.username;
             $localStorage.statusdata = 0;

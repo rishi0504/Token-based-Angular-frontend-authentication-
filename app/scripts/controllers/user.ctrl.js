@@ -12,8 +12,7 @@ user.factory('authInterceptor', function ($q, $window) {
             config.headers = config.headers || {};
             if ($window.sessionStorage.token) {
                 config.headers['x-access-token'] = "" + $window.sessionStorage.token;
-                config.headers['username'] = ""+$window.sessionStorage.username;
-
+                config.headers['username'] = "" + $window.sessionStorage.username;
             }
             return config;
         },
@@ -30,19 +29,14 @@ user.config(function ($httpProvider) {
     $httpProvider.interceptors.push('authInterceptor');
 });
 
-user.controller("UserCtrl", function ($scope, $http, $window) {
 
-   
-
-    $http.get('http://localhost:9000/user/getdetail').success(function (data) {
-        var newdata = JSON.stringify(data);
-        console.log(newdata);
-
-    }).error(function(problem){
+user.controller("UserCtrl", function ($scope, $http, $window, $rootScope) {
+    $scope.userdata = {};
+    $http.get('http://localhost:9000/user/getdetail').success(function (response) {
+        $scope.userdata.name = response[0]['name'];
+        $scope.userdata.email = response[0]['email'];
+        $rootScope.userdata = $scope.userdata;
+    }).error(function (problem) {
         alert(problem);
     });
-
-
-})
-;
-
+});
