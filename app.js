@@ -3,22 +3,32 @@
  */
 
 
-var app = angular.module('app', ['ngRoute', 'signin', 'user', 'ngStorage']);
+var app = angular.module('app', ['ngRoute', 'signin', 'signup', 'user', 'ngStorage']);
 
 
 app.config(function ($routeProvider) {
     $routeProvider
         .when('/', {
             templateUrl: 'app/views/home.html'
+        }).when('/home', {
+            templateUrl: 'app/views/home.html'
         }).when('/signin', {
             templateUrl: 'app/views/signin.html',
             controller: 'SignCtrl',
             resolve: {
                 status: function check($window, $location) {
-                    if ($window.sessionStorage.token && $window.sessionStorage.token != "" ) {
-                        if ($location.path('/signin')){
-                            $location.path('/user');
-                        }
+                    if ($window.sessionStorage.token) {
+                        $location.path('/user');
+                    }
+                }
+            }
+        }).when('/signup', {
+            templateUrl: 'app/views/signup.html',
+            controller: 'SignUp',
+            resolve: {
+                status: function check($window, $location) {
+                    if ($window.sessionStorage.token) {
+                        $location.path('/user');
                     }
                 }
             }
@@ -27,13 +37,12 @@ app.config(function ($routeProvider) {
             controller: 'UserCtrl',
             resolve: {
                 status: function check($window, $location) {
-                    if (!$window.sessionStorage.token && $window.sessionStorage.token == "") {
-                        if ($location.path('/user')){
-                            $location.path('/signin');
-                        }
+                    if (!$window.sessionStorage.token) {
+                        $location.path('/signin');
                     }
                 }
             }
+
         }).when('/setting', {
             templateUrl: 'app/views/setting.html'
         }).otherwise({
@@ -43,28 +52,24 @@ app.config(function ($routeProvider) {
 });
 
 app.run(function ($window, $location) {
-    if (!$window.sessionStorage.token && $window.sessionStorage.token == "") {
-        $location.path('/signin');
-    } else {
-        $location.path('/user');
-    }
+    /* if (!$window.sessionStorage.token && $window.sessionStorage.token == "") {
+     $location.path('/signin');
+     } else {
+     $location.path('/user');
+     }*/
 });
 
 
 app.controller('MainCtrl', function ($scope, $rootScope, $window, $localStorage, $location) {
     $scope.user = {};
     $scope.islogin = function () {
-        if ($window.sessionStorage.token != "" && $window.sessionStorage.username != "") {
-            if ($localStorage.statusdata == 200) {
-                $scope.user.name = $window.sessionStorage.username;
-                return true;
-            }
+        if ($window.sessionStorage.token && $window.sessionStorage.username != "") {
+            $scope.user.name = $window.sessionStorage.username;
+            return true;
         }
     }
 
-
     $scope.islogout = function () {
-        $localStorage.statusdata = 0;
         $window.sessionStorage.token = "";
         $window.sessionStorage.username = "";
         $location.path('/signin');
